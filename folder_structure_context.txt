@@ -1,0 +1,24 @@
+project/
+├── data/
+│   ├── task_a_subset.parquet       # Step 2
+│   └── task_b_subset.parquet       # Step 3
+├── src/
+│   ├── preprocess.py               # Step 4
+│   ├── train_task_a.py             # Step 6
+│   ├── train_task_b.py             # Step 7
+│   └── evaluate.py                 # Step 10
+├── outputs/
+│   ├── models/
+│   │   ├── model_task_a.pt         # Step 13
+│   │   └── model_task_b.pt         # Step 14
+│   ├── figures/
+│   │   ├── confusion_matrix_task_a.png  # Step 15
+│   │   ├── confusion_matrix_task_b.png  # Step 16
+│   │   ├── loss_curve_a.png        # Step 17
+│   │   └── loss_curve_b.png        # Step 17
+│   └── submissions/
+│       ├── submission_task_a.csv   # Step 21
+│       └── submission_task_b.csv   # Step 21
+└── poster/
+    ├── poster.tex                  # Step 23
+    └── poster.pdf                  # Step 32

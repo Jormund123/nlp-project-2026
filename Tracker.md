@@ -1,9 +1,9 @@
 ## Progress Tracker
 
 ### Day 1
-- [ ] Step 1: Download dataset
-- [ ] Step 2: Task A subset
-- [ ] Step 3: Task B subset
+- [X] Step 1: Download dataset
+- [X] Step 2: Task A subset
+- [X] Step 3: Task B subset
 - [ ] Step 4: Preprocessing function
 - [ ] Step 5: Tokenizer + data loader
 - [ ] Step 6: Task A training script

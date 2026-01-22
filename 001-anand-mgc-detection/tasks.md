@@ -38,14 +38,14 @@
 
 **Purpose**: Establish lexical baseline for comparison
 
-- [ ] T011 [Day1] Implement `train_tfidf_baseline()` in `src/baseline_tfidf.py`
+- [x] T011 [Day1] Implement `train_tfidf_baseline()` in `src/baseline_tfidf.py`
   - Config: `max_features=10000, ngram_range=(1, 3), min_df=2`
   - Use `class_weight='balanced'` for LogisticRegression
-- [ ] T012 [Day1] Train TF-IDF + LogReg on Task A subset (use raw `code` column)
-- [ ] T013 [Day1] Evaluate and print F1 score (expect ~0.60-0.70)
-- [ ] T014 [Day1] Save TF-IDF model and vectorizer for later use
+- [x] T012 [Day1] Train TF-IDF + LogReg on Task A subset (use raw `code` column)
+- [x] T013 [Day1] Evaluate and print F1 score (expect ~0.60-0.70)
+- [x] T014 [Day1] Save TF-IDF model and vectorizer for later use
 
-**Checkpoint**: ✅ TF-IDF F1 score recorded: \_\_\_
+**Checkpoint**: ✅ TF-IDF F1 score recorded: **0.8310** (ROC-AUC: 0.9107)
 
 ---
 
@@ -53,20 +53,20 @@
 
 **Purpose**: Implement transformer-based classifier
 
-- [ ] T015 [Day1] Set up CodeBERT tokenizer (`microsoft/codebert-base`)
-- [ ] T016 [Day1] Implement `CodeDataset` class in `src/train_task_a.py`
-- [ ] T017 [Day1] Verify batch tokenization shape `(32, 512)`
-- [ ] T018 [Day1] Implement `CodeBERTClassifier` model class (768 → 2 classification head)
-- [ ] T019 [Day1] Implement training loop with AdamW optimizer
+- [x] T015 [Day1] Set up CodeBERT tokenizer (`microsoft/codebert-base`)
+- [x] T016 [Day1] Implement `CodeDataset` class in `src/train_task_a.py`
+- [x] T017 [Day1] Verify batch tokenization shape `(32, 512)`
+- [x] T018 [Day1] Implement `CodeBERTClassifier` model class (768 → 2 classification head)
+- [x] T019 [Day1] Implement training loop with AdamW optimizer
   - Config: `lr=2e-5, weight_decay=0.01`
-- [ ] T020 [Day1] Implement learning rate scheduler (linear warmup, `warmup_ratio=0.1`)
-- [ ] T021 [Day1] Test training script runs 1 epoch without crash
-- [ ] T022 [Day1] Train full model on RAW code (3 epochs, 20k samples)
+- [x] T020 [Day1] Implement learning rate scheduler (linear warmup, `warmup_ratio=0.1`)
+- [x] T021 [Day1] Test training script runs 1 epoch without crash
+- [x] T022 [Day1] Train full model on RAW code (3 epochs, 20k samples)
   - ⚠️ **Primary experiment**: Use raw `code` column (preserves AI fingerprints)
-- [ ] T023 [Day1] Save checkpoint to `outputs/models/model_task_a_raw.pt`
-- [ ] T024 [Day1] Record training losses for each epoch
+- [x] T023 [Day1] Save checkpoint to `outputs/models/model_task_a_raw.pt`
+- [x] T024 [Day1] Record training losses for each epoch: 0.1819, 0.0532, 0.0326
 
-**Checkpoint**: ✅ CodeBERT F1 score recorded: \_\_\_
+**Checkpoint**: ✅ CodeBERT F1 score recorded: **0.9854** (ROC-AUC: 0.9988)
 
 ---
 
@@ -74,17 +74,17 @@
 
 **Purpose**: Evaluate both models on validation set
 
-- [ ] T025 [Day1] Implement `evaluate_model()` function in `src/evaluate.py`
+- [x] T025 [Day1] Implement `evaluate_model()` function in `src/evaluate.py`
   - Return: F1, precision, recall, confusion_matrix, ROC-AUC (if proba provided)
-- [ ] T026 [Day1] Evaluate TF-IDF on validation set → record F1
-- [ ] T027 [Day1] Evaluate CodeBERT on validation set → record F1, ROC-AUC
-- [ ] T028 [Day1] Fill baseline comparison table:
+- [x] T026 [Day1] Evaluate TF-IDF on validation set → record F1
+- [x] T027 [Day1] Evaluate CodeBERT on validation set → record F1, ROC-AUC
+- [x] T028 [Day1] Fill baseline comparison table:
 
-| Model           | Task A F1 | ROC-AUC |
-| --------------- | --------- | ------- |
-| TF-IDF + LogReg | \_\_\_    | \_\_\_  |
-| CodeBERT (raw)  | \_\_\_    | \_\_\_  |
-| **Improvement** | +\_\_\_%  |         |
+| Model           | Task A F1 | ROC-AUC            |
+| --------------- | --------- | ------------------ |
+| TF-IDF + LogReg | 0.8310    | 0.9107             |
+| CodeBERT (raw)  | 0.9854    | 0.9988             |
+| **Improvement** | +18.58%   | (Significant jump) |
 
 **Checkpoint**: ✅ Both F1 scores recorded, improvement calculated
 

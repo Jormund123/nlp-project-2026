@@ -76,7 +76,7 @@ Create an A0 academic poster with all findings and visualizations.
 
 - **FR-001**: System MUST download SemEval-2026 Task 13 dataset from HuggingFace
 - **FR-002**: System MUST create 20k stratified subset for Task A
-- **FR-003**: System MUST implement TF-IDF + Logistic Regression baseline with max_features=10000, ngram_range=(1,2)
+- **FR-003**: System MUST implement TF-IDF + Logistic Regression baseline with max_features=10000, ngram_range=(1,3)
 - **FR-004**: System MUST implement preprocessing function (comment removal, whitespace normalization)
 - **FR-005**: System MUST use CodeBERT tokenizer with max_length=512
 - **FR-006**: System MUST implement PyTorch DataLoader with batch_size=32

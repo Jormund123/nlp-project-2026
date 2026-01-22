@@ -17,18 +17,18 @@
 
 **Purpose**: Set up development environment and prepare dataset
 
-- [ ] T001 [Day1] Create/verify virtual environment with all dependencies from requirements.txt
-- [ ] T002 [Day1] Verify GPU access (torch.cuda.is_available() returns True)
-- [ ] T003 [Day1] Download SemEval-2026 Task 13 dataset from HuggingFace
-- [ ] T004 [Day1] Create 20k stratified subset for Task A → `data/task_a_subset.parquet`
+- [x] T001 [Day1] Create/verify virtual environment with all dependencies from requirements.txt
+- [x] T002 [Day1] Verify GPU access (torch.cuda.is_available() returns True) - Device available MPS
+- [x] T003 [Day1] Download SemEval-2026 Task 13 dataset from HuggingFace
+- [x] T004 [Day1] Create 20k stratified subset for Task A → `data/task_a_subset.parquet`
   - ⚠️ **Critical**: Stratify by BOTH label AND language (not just label)
   - Create combined stratification column: `df['stratify_col'] = df['label'].astype(str) + "_" + df['language']`
-- [ ] T005 [Day1] Verify stratification: print language distribution in train AND val sets
-- [ ] T006 [Day1] Implement `remove_comments()` function in `src/preprocess.py`
-- [ ] T007 [Day1] Implement `normalize_whitespace()` function in `src/preprocess.py`
-- [ ] T008 [Day1] Implement `preprocess_code()` wrapper in `src/preprocess.py`
-- [ ] T009 [Day1] Add both `code` (raw) and `code_preprocessed` columns to parquet
-- [ ] T010 [Day1] Test preprocessing on 100 samples (verify no crashes)
+- [x] T005 [Day1] Verify stratification: print language distribution in train AND val sets
+- [x] T006 [Day1] Implement `remove_comments()` function in `src/preprocess.py`
+- [x] T007 [Day1] Implement `normalize_whitespace()` function in `src/preprocess.py`
+- [x] T008 [Day1] Implement `preprocess_code()` wrapper in `src/preprocess.py`
+- [x] T009 [Day1] Add both `code` (raw) and `code_preprocessed` columns to parquet
+- [x] T010 [Day1] Test preprocessing on 100 samples (verify no crashes)
 
 **Checkpoint**: ✅ `task_a_subset.parquet` exists with 20k samples, language distribution balanced between train/val
 

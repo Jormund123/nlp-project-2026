@@ -90,52 +90,56 @@
 
 ---
 
-## Phase 5: Ablation Study (Day 2) ⏳
+## Phase 5: Ablation Study (Day 2) ✅
 
 **Purpose**: Test the "Fingerprint Paradox" hypothesis
 
 > **Hypothesis**: Raw code will outperform preprocessed code because AI signatures live in comments, formatting, and whitespace patterns.
 
-- [ ] T029 [Day2] Add `--preprocess` flag to training script (default is RAW code)
-- [ ] T030 [Day2] Train CodeBERT WITH preprocessing (`code_preprocessed` column)
-- [ ] T031 [Day2] Save checkpoint to `outputs/models/model_task_a_preprocessed.pt`
-- [ ] T032 [Day2] Evaluate preprocessed model on validation set
-- [ ] T033 [Day2] Compare F1: raw vs preprocessed
-- [ ] T034 [Day2] Fill ablation table:
+- [x] T029 [Day2] Add `--preprocess` flag to training script (default is RAW code)
+- [x] T030 [Day2] Train CodeBERT WITH preprocessing (`code_preprocessed` column)
+- [x] T031 [Day2] Save checkpoint to `outputs/models/model_task_a_preprocessed.pt`
+- [x] T032 [Day2] Evaluate preprocessed model on validation set
+- [x] T033 [Day2] Compare F1: raw vs preprocessed
+- [x] T034 [Day2] Fill ablation table:
 
-| Variant                 | Task A F1 | Notes                           |
-| ----------------------- | --------- | ------------------------------- |
-| **Raw code** (primary)  | \_\_\_    | Preserves AI fingerprints       |
-| Preprocessed (ablation) | \_\_\_    | Removes discriminative features |
-| **Difference**          | ±\_\_\_%  |                                 |
+| Variant                 | Task A F1  | ROC-AUC | Notes                           |
+| ----------------------- | ---------- | ------- | ------------------------------- |
+| **Raw code** (primary)  | **0.9854** | 0.9988  | Preserves AI fingerprints       |
+| Preprocessed (ablation) | 0.9720     | 0.9953  | Removes discriminative features |
+| **Difference**          | **+1.34%** | +0.35%  | Raw code confirms hypothesis    |
 
-- [ ] T035 [Day2] Write 1-sentence insight about preprocessing impact (confirm/reject hypothesis)
+- [x] T035 [Day2] Write 1-sentence insight about preprocessing impact (confirm/reject hypothesis)
 
-**Checkpoint**: ✅ Ablation results documented, hypothesis tested
+> **Insight**: The Fingerprint Paradox is confirmed—raw code (F1=0.9854) outperforms preprocessed (F1=0.9720) because AI-generated code contains stylistic signatures in comments, formatting, and whitespace patterns that preprocessing destroys.
+
+**Checkpoint**: ✅ Ablation results documented, hypothesis confirmed
 
 ---
 
-## Phase 6: Per-Language Analysis (Day 2) ⏳
+## Phase 6: Per-Language Analysis (Day 2) ✅
 
 **Purpose**: Analyze model performance across programming languages
 
-- [ ] T036 [Day2] Implement `compute_per_language_f1()` in `src/evaluate.py`
-- [ ] T037 [Day2] Compute F1 for Python samples
-- [ ] T038 [Day2] Compute F1 for Java samples
-- [ ] T039 [Day2] Compute F1 for C++ samples
-- [ ] T040 [Day2] Fill per-language table:
+- [x] T036 [Day2] Implement `compute_per_language_f1()` in `src/evaluate.py`
+- [x] T037 [Day2] Compute F1 for Python samples
+- [x] T038 [Day2] Compute F1 for Java samples
+- [x] T039 [Day2] Compute F1 for C++ samples
+- [x] T040 [Day2] Fill per-language table:
 
-| Language | Samples | F1     | Notes                                    |
-| -------- | ------- | ------ | ---------------------------------------- |
-| Python   | \_\_\_  | \_\_\_ | Expected: hardest (most human variation) |
-| Java     | \_\_\_  | \_\_\_ |                                          |
-| C++      | \_\_\_  | \_\_\_ |                                          |
+| Language | Samples | F1         | Notes                                |
+| -------- | ------- | ---------- | ------------------------------------ |
+| Python   | 3,659   | **0.9778** | Highest—model saw 91% Python samples |
+| C++      | 187     | 0.9239     | Lower due to small sample size       |
+| Java     | 154     | 0.8970     | Lowest—only 4% of training data      |
+
+> **Insight**: Hypothesis rejected. Python is _easiest_ not hardest—because the dataset is 91% Python. The model underfits on Java/C++ due to data imbalance, not language complexity.
 
 **Checkpoint**: ✅ Per-language breakdown complete
 
 ---
 
-## Phase 7: Visualization Generation (Day 2) ⏳
+## Phase 7: Visualization Generation (Day 2) ✅
 
 **Purpose**: Create all figures for poster (academic standard, 300 DPI)
 
@@ -146,14 +150,14 @@ plt.style.use('seaborn-v0_8-whitegrid')
 COLORS = {'tfidf': '#1f77b4', 'codebert': '#ff7f0e', 'raw': '#2ca02c', 'preprocessed': '#7f7f7f'}
 ```
 
-- [ ] T041 [Day2] [P] Implement `generate_confusion_matrix()` in `src/evaluate.py`
-- [ ] T042 [Day2] [P] Generate `outputs/figures/confusion_matrix_task_a.png`
-- [ ] T043 [Day2] [P] Implement `generate_loss_curve()` in `src/evaluate.py`
-- [ ] T044 [Day2] [P] Generate `outputs/figures/loss_curve_a.png`
-- [ ] T045 [Day2] [P] Implement `generate_baseline_comparison()` in `src/evaluate.py`
-- [ ] T046 [Day2] [P] Generate `outputs/figures/baseline_comparison.png`
-- [ ] T047 [Day2] [P] Implement `generate_pr_curve()` in `src/evaluate.py`
-- [ ] T048 [Day2] [P] Generate `outputs/figures/pr_curve_task_a.png`
+- [x] T041 [Day2] [P] Implement `generate_confusion_matrix()` in `src/evaluate.py`
+- [x] T042 [Day2] [P] Generate `outputs/figures/confusion_matrix_task_a.png`
+- [x] T043 [Day2] [P] Implement `generate_loss_curve()` in `src/evaluate.py`
+- [x] T044 [Day2] [P] Generate `outputs/figures/loss_curve_a.png`
+- [x] T045 [Day2] [P] Implement `generate_baseline_comparison()` in `src/evaluate.py`
+- [x] T046 [Day2] [P] Generate `outputs/figures/baseline_comparison.png`
+- [x] T047 [Day2] [P] Implement `generate_pr_curve()` in `src/evaluate.py`
+- [x] T048 [Day2] [P] Generate `outputs/figures/pr_curve_task_a.png`
 
 **Checkpoint**: ✅ All 4 PNG files exist (confusion matrix, loss curve, baseline comparison, PR curve)
 
@@ -163,9 +167,9 @@ COLORS = {'tfidf': '#1f77b4', 'codebert': '#ff7f0e', 'raw': '#2ca02c', 'preproce
 
 **Purpose**: Generate and submit predictions to Kaggle
 
-- [ ] T049 [Day2] Load test set from HuggingFace dataset
-- [ ] T050 [Day2] Generate predictions using best model (raw code CodeBERT)
-- [ ] T051 [Day2] Create `outputs/submissions/submission_task_a.csv`
+- [x] T049 [Day2] Load test set from HuggingFace dataset
+- [x] T050 [Day2] Generate predictions using best model (raw code CodeBERT)
+- [x] T051 [Day2] Create `outputs/submissions/submission_task_a.csv`
 - [ ] T052 [Day2] Submit to Kaggle Task A competition
 - [ ] T053 [Day2] Record leaderboard score: \_\_\_
 

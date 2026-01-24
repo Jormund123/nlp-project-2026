@@ -141,22 +141,88 @@ def generate_pr_curve(y_true, y_prob, title, filename):
     plt.close()
     print(f"✓ Saved {filename}")
 
+def generate_loss_curve(losses, title, filename):
+    """Generate and save loss curve (T043)."""
+    epochs = range(1, len(losses) + 1)
+    plt.figure(figsize=FIGURE_SIZE)
+    plt.plot(epochs, losses, marker='o', linestyle='-', color=COLORS['codebert'])
+    plt.title(title)
+    plt.xlabel('Epoch')
+    plt.ylabel('Training Loss')
+    plt.xticks(epochs)
+    plt.grid(True)
+    plt.savefig(os.path.join(FIGURES_DIR, filename), dpi=FIGURE_DPI)
+    plt.close()
+    print(f"✓ Saved {filename}")
+
+def generate_baseline_comparison(tfidf_f1, codebert_f1, title, filename):
+    """Generate and save baseline comparison bar chart (T045)."""
+    models = ['TF-IDF + LogReg', 'CodeBERT (Raw)']
+    scores = [tfidf_f1, codebert_f1]
+    
+    plt.figure(figsize=FIGURE_SIZE)
+    bars = plt.bar(models, scores, color=[COLORS['tfidf'], COLORS['codebert']])
+    plt.ylim(0, 1.0)
+    plt.title(title)
+    plt.ylabel('F1 Score')
+    
+    # Add value labels
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                 f'{height:.4f}',
+                 ha='center', va='bottom')
+                 
+    plt.savefig(os.path.join(FIGURES_DIR, filename), dpi=FIGURE_DPI)
+    plt.close()
+    print(f"✓ Saved {filename}")
+
 if __name__ == "__main__":
-    # Example usage for verification
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model_path', type=str, required=True, help='Path to trained .pt model')
+    parser.add_argument('--preprocess', action='store_true', help='Use preprocessed code column')
+    parser.add_argument('--output_prefix', type=str, default='task_a', help='Prefix for output files')
+    args = parser.parse_args()
+
+    # Load Validation Data
     val_df = pd.read_parquet(os.path.join(DATA_DIR, "task_a_val.parquet"))
     
-    # Load TF-IDF (Local)
-    tfidf_path = os.path.join(MODELS_DIR, "tfidf_task_a.joblib")
-    lr_path = os.path.join(MODELS_DIR, "logreg_task_a.joblib")
+    # ⚠️ Select Column Based on Flag
+    code_col = 'code_preprocessed' if args.preprocess else 'code'
+    print(f"Evaluating using column: {code_col}")
     
-    if os.path.exists(tfidf_path) and os.path.exists(lr_path):
-        print("Evaluating TF-IDF Baseline...")
-        tfidf = joblib.load(tfidf_path)
-        clf = joblib.load(lr_path)
+    # Load Model
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.backends.mps.is_available():
+        device = torch.device("mps")
         
-        X_test = tfidf.transform(val_df['code'])
-        y_pred = clf.predict(X_test)
-        y_prob = clf.predict_proba(X_test)[:, 1]
-        
-        evaluate_model(val_df['label'], y_pred, y_prob, "TF-IDF Baseline")
-        generate_confusion_matrix(val_df['label'], y_pred, "TF-IDF Confusion Matrix", "confusion_matrix_tfidf.png")
+    print(f"Loading model from {args.model_path}...")
+    model, tokenizer = load_codebert_model(args.model_path, device)
+    
+    # Generate Predictions
+    print("Generating predictions...")
+    y_pred, y_prob = get_codebert_preds(model, tokenizer, val_df[code_col].tolist(), device)
+    
+    # Evaluate
+    f1, report = evaluate_model(val_df['label'], y_pred, y_prob, "CodeBERT")
+    
+    # Generate Visualizations
+    variant = "preprocessed" if args.preprocess else "raw"
+    
+    generate_confusion_matrix(
+        val_df['label'], 
+        y_pred, 
+        f"Confusion Matrix ({variant})", 
+        f"confusion_matrix_{args.output_prefix}_{variant}.png"
+    )
+    
+    generate_pr_curve(
+        val_df['label'], 
+        y_prob, 
+        f"CodeBERT ({variant})", 
+        f"pr_curve_{args.output_prefix}_{variant}.png"
+    )
+    
+    # Per-Language Analysis (Only for Raw code usually, but can do both)
+    compute_per_language_f1(val_df, y_pred)

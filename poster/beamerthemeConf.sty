@@ -1,0 +1,117 @@
+\ProvidesPackage{beamerthemeConf}
+
+% Required packages
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{caption}
+
+% University of Bonn Colors
+\definecolor{UniBlue}{RGB}{7, 82, 154}
+\definecolor{UniYellow}{RGB}{234, 185, 12}
+\definecolor{UniGray}{RGB}{100, 100, 100}
+
+\mode<presentation>
+
+% Fonts
+\usepackage{helvet}
+\usepackage{palatino}
+
+% Layout
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=1cm, text margin right=1cm}
+
+% Headline Colors
+\setbeamercolor{headline}{bg=white}
+\setbeamercolor{title in headline}{fg=UniBlue}
+\setbeamercolor{author in headline}{fg=UniGray}
+\setbeamercolor{institute in headline}{fg=UniGray}
+\setbeamercolor{lower separation line head}{bg=UniYellow}
+
+% Headline (Banner)
+\setbeamertemplate{headline}{  
+  \leavevmode
+  \begin{beamercolorbox}[wd=\paperwidth,ht=12cm]{headline}
+    \begin{columns}[T]
+      \begin{column}{.02\paperwidth}
+      \end{column}
+      \begin{column}{.20\paperwidth}
+        \vskip1cm
+        \centering
+        \includegraphics[width=0.8\linewidth]{uni-bonn-logo.jpg}
+        \vskip0.5cm
+      \end{column}
+      \begin{column}{.56\paperwidth}
+        \vskip1cm
+        \centering
+        {\color{UniBlue}\Huge{\textbf{\inserttitle}}\\[1ex]}
+        {\color{UniGray}\Large{\insertauthor}\\[1ex]}
+        {\color{UniGray}\large{\insertinstitute}\\[1ex]}
+        \vskip1cm
+      \end{column}
+      \begin{column}{.20\paperwidth}
+        \vskip1cm
+        \centering
+        \includegraphics[width=0.8\linewidth]{CAISA-LAB-logo.png}
+        \vskip0.5cm
+      \end{column}
+      \begin{column}{.02\paperwidth}
+      \end{column}
+    \end{columns}
+  \end{beamercolorbox}
+  
+  % Decorative Yellow Line
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[UniYellow, line width=6pt] (0,0) -- (\paperwidth,0);
+  \end{tikzpicture}
+  \vskip0.5cm
+}
+
+% Block Style
+\setbeamertemplate{block begin}{
+  \vskip.75ex
+  \begin{beamercolorbox}[leftskip=1cm,colsep*=.75ex]{block title}%
+    \usebeamerfont*{block title}\Large\textbf{\insertblocktitle}
+  \end{beamercolorbox}%
+  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body}%
+  \begin{beamercolorbox}[colsep*=.75ex,sep=.75ex,vmode]{block body}%
+    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\setbeamertemplate{block end}{
+  \end{beamercolorbox}
+  \vskip1.5ex
+}
+
+% Block Colors
+\setbeamercolor{block title}{fg=white,bg=UniBlue}
+\setbeamercolor{block body}{fg=black,bg=white}
+
+% Alert Block Colors
+\setbeamercolor{block title alerted}{fg=white,bg=red!70!black}
+\setbeamercolor{block body alerted}{fg=black,bg=red!10}
+
+% Itemize
+\setbeamertemplate{itemize items}[circle]
+\setbeamercolor{itemize item}{fg=UniBlue}
+\setbeamercolor{itemize subitem}{fg=UniBlue}
+
+% Footer Colors
+\setbeamercolor{author in head/foot}{fg=UniGray,bg=white}
+\setbeamercolor{upper separation line foot}{bg=UniYellow}
+\setbeamercolor{lower separation line foot}{bg=UniYellow}
+
+% Footer
+\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2pt]{upper separation line foot}
+  \end{beamercolorbox}
+  \leavevmode%
+  \begin{beamercolorbox}[ht=4ex,leftskip=1cm,rightskip=1cm]{author in head/foot}%
+    \texttt{https://github.com/anandkarna/nlp-project} \hfill \texttt{SemEval-2026 Task 13}
+    \vskip1ex
+  \end{beamercolorbox}
+  \vskip0pt%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2pt]{lower separation line foot}
+  \end{beamercolorbox}
+}
+
+\mode<all>

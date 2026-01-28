@@ -1,0 +1,145 @@
+\documentclass[final]{beamer}
+\usepackage[scale=1.4]{beamerposter} 
+\usepackage{graphicx}
+\usepackage{booktabs} 
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{caption}
+
+\usetheme{Conf}
+
+% Title / Author
+\title{Beyond the Surface: The Fingerprint Effect in AI Code Detection}
+\author{Anand Karna (50393435) \and Zeev Tayer (50469172)}
+\institute{CAISA Lab -- Introduction to Natural Language Processing (Winter Semester 2025/2026) \\ University of Bonn}
+
+\begin{document}
+\begin{frame}[t]
+\begin{columns}[t]
+    % --- COLUMN 1 ---
+    \begin{column}{.32\linewidth}
+    
+        \begin{block}{1. The "Fingerprint Effect" Hypothesis}
+        \textbf{The Central Thesis}: In detecting machine-generated code (MGC), stylistic artifacts are stronger predictive signals than semantic logic.
+        
+        \vspace{1em}
+        \textbf{The Entropy Argument}:
+        \begin{itemize}
+            \item \textbf{Human Code (High Entropy)}: Characterized by "chaos". Variable formatting, typos, informal comments (\texttt{\# todo fix}), inconsistent indentation.
+            \item \textbf{AI Code (Low Entropy)}: Characterized by "perfection". LLMs minimize formatting entropy, defaulting to standard styles (PEP-8) and formal docstrings.
+        \end{itemize}
+
+        \vspace{1em}
+        \textbf{The Preprocessing Trap}:
+        Standard NLP removes "noise" (preprocessing). In this domain, \textbf{noise is the signal}. Preprocessing artificially lowers the entropy of human code, making it indistinguishable from AI code.
+        \end{block}
+
+        \begin{block}{2. Architectural Decisions}
+        \textbf{Model}: \texttt{microsoft/codebert-base} (110M params).
+        \begin{itemize}
+            \item \textbf{Why CodeBERT?}: Pre-trained on CodeSearchNet. Understands syntax (indentation, brackets) better than generic BERT.
+            \item \textbf{Why not Generation?}: Classification via encoder is faster and cheaper than perplexity-based detection with Llama-2.
+        \end{itemize}
+        
+        \vspace{0.5em}
+        \textbf{Baseline}: \texttt{TF-IDF (10k features, 1-3 grams)}.
+        \end{block}
+        
+        \begin{block}{3. Data Strategy}
+        \textbf{Constraint}: 500k samples available $\rightarrow$ used \textbf{20k Stratified Subset}.
+        \begin{itemize}
+            \item \textbf{Resource Reality}: Free Colab T4 (12GB RAM) crashes loading full dataset.
+            \item \textbf{Statistical Power}: $N=20,000$ yields standard error $<0.5\%$, sufficient to validate the hypothesis.
+        \end{itemize}
+        
+        \vspace{0.5em}
+        \textbf{Stratification}: Balanced by \textbf{Label + Language}.
+        Ensures model learns intra-language distinctions, not proxies (e.g., "Java = AI").
+        \end{block}
+
+    \end{column}
+
+    % --- COLUMN 2 ---
+    \begin{column}{.32\linewidth}
+        \begin{block}{4. Task A (Binary): Results \& Ablation}
+        \textbf{Goal}: Detect Human vs. AI (Anand Karna).
+        \vspace{0.5em}
+        \textbf{Performance}:
+        \begin{itemize}
+            \item \textbf{CodeBERT (Raw)}: \textbf{F1 = 0.9854}
+            \item \textbf{TF-IDF Baseline}: F1 = 0.8310 (+15.4\% improvement)
+        \end{itemize}
+        
+        \begin{center}
+        \includegraphics[width=0.9\linewidth]{figures/loss_curve_ablation.png}
+        \captionof{figure}{\textbf{Figure 1}: Training Loss. Raw Code (Red) converges 40--50\% faster than Preprocessed Code (Blue). The model learns stylistic fingerprints early.}
+        \end{center}
+
+        \textbf{Ablation Study (The Proof)}:
+        \begin{table}
+        \centering
+        \begin{tabular}{lccc}
+        \toprule
+        \textbf{Input} & \textbf{F1 Score} & \textbf{Error Rate} & \textbf{$\Delta$ Error} \\
+        \midrule
+        Raw Code & 0.9854 & 1.46\% & -- \\
+        Preprocessed & 0.9720 & 2.80\% & \textbf{+91\%} \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+        \vspace{0.5em}
+        \textbf{Finding}: Preprocessing nearly doubled the error rate, confirming that $\sim$50\% of the "hard" cases rely on stylistic fingerprints.
+        \end{block}
+        
+        \begin{block}{5. Theoretical Foundations}
+        \textbf{Transformer Attention}:
+        $$ \text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V $$
+        CodeBERT learns long-range dependencies (e.g., \texttt{return} depends on variable usage) that TF-IDF misses.
+        \end{block}
+    \end{column}
+
+    % --- COLUMN 3 ---
+    \begin{column}{.32\linewidth}
+        \begin{block}{6. Task B (Multi-Class): Attribution}
+        \textbf{Goal}: Identify 11 Generators (Zeev Tayer).
+        \vspace{0.5em}
+        \textbf{Challenge}: Distinguishing between subtle variations (e.g., GPT-4 vs Llama-2).
+        
+        \vspace{0.5em}
+        \textbf{Result}: \textbf{F1 = 0.72} (vs Binary 0.98).
+        
+        \begin{center}
+        \includegraphics[width=0.9\linewidth]{figures/confusion_matrix_normalized.png}
+        \captionof{figure}{\textbf{Figure 2}: Normalized Confusion Matrix. Human code (Class 0) is distinct. The "GPT Block" (Classes 1-3) shows high internal confusion due to shared training lineage.}
+        \end{center}
+        
+        \textbf{Impact of Style}:
+        In multi-class settings, removing style caused a \textbf{--3.6\% F1 drop}. 
+        \textit{"Distinguishing GPT-4 from Llama-2 often relies entirely on formatting quirks."}
+        \end{block}
+
+        \begin{block}{7. Limitations \& Ethics}
+        \textbf{Dataset Bias}: 90\% Python. Results may not transfer well to C++ or Java.
+        
+        \vspace{0.5em}
+        \textbf{The 98\% Illusion}: High F1 reflects dataset artifacts (Prompt Engineering consistent patterns), not universal AI detection.
+        
+        \vspace{1em}
+        \begin{alertblock}{Ethical Policy}
+        \textbf{False Positive Rate} is $\approx$ 2\%. In a class of 200 students, 4 would be falsely accused. 
+        
+        \vspace{0.5em}
+        \textbf{Conclusion}: This tool must \textbf{never} be used as a sole judge, only as a screening tool for human review.
+        \end{alertblock}
+        \end{block}
+        
+        \begin{block}{8. References}
+        \small
+        [1] Feng et al. (2020). CodeBERT: A Pre-Trained Model for Programming and Natural Languages. arXiv:2002.08155\\[0.5em]
+        [2] SemEval-2026 Task 13 Dataset: HuggingFace \texttt{DaniilOr/SemEval-2026-Task13}
+        \end{block}
+    \end{column}
+
+\end{columns}
+\end{frame}
+\end{document}
